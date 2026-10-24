@@ -43,3 +43,25 @@ function syncPair(n, r){var a=document.getElementById(n),b=document.getElementBy
 a.addEventListener('input',function(){b.value=a.value;calc();});
 b.addEventListener('input',function(){a.value=b.value;calc();});}
 function val(id){return parseFloat(document.getElementById(id).value)||0;}
+
+/* Mobile nav + calculator search/category filters (homepage + hub). */
+window.toggleNav = function(){
+  var n = document.getElementById('mainNav');
+  if (n) n.classList.toggle('open');
+};
+(function(){
+  var activeCat = 'all', q = '';
+  function applyFilters(){
+    document.querySelectorAll('.toolcard').forEach(function(c){
+      var okCat = activeCat === 'all' || c.getAttribute('data-cat') === activeCat;
+      var okQ = !q || (c.getAttribute('data-name') || '').indexOf(q) > -1;
+      c.style.display = (okCat && okQ) ? '' : 'none';
+    });
+  }
+  window.filterCat = function(cat, btn){
+    activeCat = cat;
+    document.querySelectorAll('.chips .chip').forEach(function(b){ b.classList.toggle('active', b === btn); });
+    applyFilters();
+  };
+  window.filterSearch = function(v){ q = (v || '').toLowerCase(); applyFilters(); };
+})();
