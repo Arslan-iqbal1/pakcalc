@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loan / EMI Calculator | PakCalc - Pakistan Finance Calculators</title>
+<meta name="description" content="Loan / EMI Calculator for Pakistan - free, instant, with charts and tables.">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/common.js"></script>
+<script src="assets/js/calc.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<header><div class="wrap"><nav><a class="brand" href="index.html">🌿 PakCalc</a><a href="index.html" data-i18n="nav-home">Home</a><a href="calculators.html" data-i18n="nav-calculators">Calculators</a><a href="calculators.html#guides" data-i18n="nav-guides">Guides</a><a href="about.html" data-i18n="nav-about">About</a><a href="contact.html" data-i18n="nav-contact">Contact</a><span class="spacer"></span><button onclick="toggleTheme()">🌙 / ☀️</button><button id="langBtn" onclick="toggleLang()">اردو</button></nav></div></header>
+<main class="wrap">
+
+<div class="hero"><h1>Loan / EMI Calculator</h1><p>Move the sliders and watch your EMI, total interest and yearly schedule update live. Compare two loans side by side.</p></div>
+<div class="tool"><div class="card">
+<h3>Loan A</h3>
+<label>Loan amount (Rs)</label><input type="number" id="lAmt" min="100000" max="50000000" step="100000" value="2000000"> <input type="range" id="lAmtR" min="100000" max="50000000" step="100000" value="2000000"><label>Interest rate (% per year)</label><input type="number" id="lRate" min="1" max="30" step="0.5" value="15"> <input type="range" id="lRateR" min="1" max="30" step="0.5" value="15"><label>Duration (years)</label><input type="number" id="lYrs" min="1" max="30" step="1" value="10"> <input type="range" id="lYrsR" min="1" max="30" step="1" value="10">
+</div><div class="card"><h3>Result - Loan A</h3>
+<p class="result" id="lEmi">-</p>
+<p id="lDetail"></p>
+<canvas id="lChart" width="300" height="300"></canvas>
+</div></div>
+<div class="card"><h3>Yearly schedule - Loan A</h3>
+<table id="lTable"><tr><th>Year</th><th>Principal paid</th><th>Interest paid</th><th>Balance</th></tr></table>
+<button class="btn secondary noprint" onclick="window.print()">Print / Save as PDF</button>
+</div>
+<div class="tool"><div class="card">
+<h3>Loan B (compare)</h3>
+<label>Loan amount (Rs)</label><input type="number" id="lAmtB" min="100000" max="50000000" step="100000" value="2000000"> <input type="range" id="lAmtBR" min="100000" max="50000000" step="100000" value="2000000"><label>Interest rate (% per year)</label><input type="number" id="lRateB" min="1" max="30" step="0.5" value="12"> <input type="range" id="lRateBR" min="1" max="30" step="0.5" value="12"><label>Duration (years)</label><input type="number" id="lYrsB" min="1" max="30" step="1" value="10"> <input type="range" id="lYrsBR" min="1" max="30" step="1" value="10">
+</div><div class="card"><h3>Comparison</h3>
+<table id="lComp"><tr><th></th><th>Loan A</th><th>Loan B</th></tr></table>
+<p id="lVerdict"></p>
+</div></div>
+<script>
+var chart = null;
+function calc(){
+  var A = emiCalc(val('lAmt'), val('lRate'), val('lYrs'));
+  var B = emiCalc(val('lAmtB'), val('lRateB'), val('lYrsB'));
+  document.getElementById('lEmi').textContent = 'EMI: ' + fmt(A.emi) + ' / month';
+  document.getElementById('lDetail').innerHTML = 'Total payment: '+fmt(A.total)+'<br>Total interest: '+fmt(A.interest);
+  var rows = '<tr><th>Year</th><th>Principal paid</th><th>Interest paid</th><th>Balance</th></tr>';
+  A.schedule.forEach(function(s){ rows += '<tr><td>'+s.year+'</td><td>'+fmt(s.principal)+'</td><td>'+fmt(s.interest)+'</td><td>'+fmt(s.balance)+'</td></tr>'; });
+  document.getElementById('lTable').innerHTML = rows;
+  document.getElementById('lComp').innerHTML =
+    '<tr><th></th><th>Loan A</th><th>Loan B</th></tr>'+
+    '<tr><td>EMI</td><td>'+fmt(A.emi)+'</td><td>'+fmt(B.emi)+'</td></tr>'+
+    '<tr><td>Total interest</td><td>'+fmt(A.interest)+'</td><td>'+fmt(B.interest)+'</td></tr>'+
+    '<tr><td>Total payment</td><td>'+fmt(A.total)+'</td><td>'+fmt(B.total)+'</td></tr>';
+  document.getElementById('lVerdict').innerHTML = A.total <= B.total ?
+    '<b>Loan A is cheaper by ' + fmt(B.total - A.total) + '.</b>' :
+    '<b>Loan B is cheaper by ' + fmt(A.total - B.total) + '.</b>';
+  if(window.Chart){
+    if(chart) chart.destroy();
+    chart = new Chart(document.getElementById('lChart'), {type:'pie',
+      data:{labels:['Principal','Interest'], datasets:[{data:[Math.round(val('lAmt')), Math.round(A.interest)], backgroundColor:['#1b7a3d','#e67e22']}]}});
+  }
+}
+['lAmt','lRate','lYrs','lAmtB','lRateB','lYrsB'].forEach(function(id){ document.getElementById(id).addEventListener('input', calc); });
+syncPair('lAmt','lAmtR'); syncPair('lRate','lRateR'); syncPair('lYrs','lYrsR');
+syncPair('lAmtB','lAmtBR'); syncPair('lRateB','lRateBR'); syncPair('lYrsB','lYrsBR'); calc();
+</script>
+
+<script>
+function syncPair(n, r){var a=document.getElementById(n),b=document.getElementById(r);
+a.addEventListener('input',function(){b.value=a.value;calc();});
+b.addEventListener('input',function(){a.value=b.value;calc();});}
+function val(id){return parseFloat(document.getElementById(id).value)||0;}
+</script>
+<div class="card"><h3 data-i18n="related">Related calculators</h3><p><a class="btn" href="compound-interest.html">Compound Interest Calculator</a> <a class="btn" href="salary.html">Salary Calculator</a> <a class="btn" href="income-tax.html">Income Tax Calculator</a> </p><p><a href="guide-loan-emi.html" data-i18n="guide-link">Read the full guide</a></p></div>
+</main>
+<footer><div class="wrap"><div class="grid"><div><h3>Calculators</h3><a href="zakat.html">Zakat Calculator</a><br><a href="income-tax.html">Income Tax Calculator</a><br><a href="loan-emi.html">Loan / EMI Calculator</a><br><a href="compound-interest.html">Compound Interest Calculator</a><br><a href="salary.html">Salary Calculator</a><br><a href="currency-converter.html">Currency Converter</a><br><a href="freelancer-fee.html">Freelancer Fee Calculator</a><br></div><div><h3>Guides</h3><a href="guide-zakat.html">How to Calculate Zakat in Pakistan</a><br><a href="guide-income-tax.html">Pakistan Income Tax Slabs 2025-26 Explained</a><br><a href="guide-loan-emi.html">How Loan EMI Works (and How to Pay Less Interest)</a><br><a href="guide-compound-interest.html">Compound Interest: How Your Money Grows</a><br><a href="guide-salary.html">Understanding Your Salary Slip and Tax Deduction</a><br><a href="guide-currency.html">USD to PKR Exchange: A Practical Guide</a><br><a href="guide-freelancer-fee.html">Fiverr and Upwork Fees: What Freelancers Actually Keep</a><br></div><div><h3>Company</h3><a href="about.html">About Us</a><br><a href="contact.html">Contact Us</a><br><a href="privacy-policy.html">Privacy Policy</a><br><a href="terms.html">Terms of Service</a><br><a href="disclaimer.html">Disclaimer</a><br><a href="calculators.html">All Calculators</a><br></div></div><p>© PakCalc — Pakistan Finance Calculators. Figures are estimates for education only, not financial advice. Tax and Zakat rates change over time; verify current rates with FBR or a qualified scholar before acting.</p></div></footer>
+</body>
+</html>
