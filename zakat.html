@@ -34,6 +34,10 @@
 <p class="note">Nisab used: the lower of gold nisab (87.48g) and silver nisab (612.36g), as most scholars recommend. Zakat is 2.5% of net zakatable wealth held for one lunar year, if it reaches nisab.</p>
 </div></div>
 <script>
+function syncPair(n, r){var a=document.getElementById(n),b=document.getElementById(r);
+a.addEventListener('input',function(){b.value=a.value;calc();});
+b.addEventListener('input',function(){a.value=b.value;calc();});}
+function val(id){return parseFloat(document.getElementById(id).value)||0;}
 function calc(){
   var r = zakatCalc({cash:val('zCash'),bank:val('zBank'),goldGrams:val('zGold'),goldPrice:val('zGoldP'),silverGrams:val('zSilver'),silverPrice:val('zSilverP'),goods:val('zGoods'),invest:val('zInvest'),debts:val('zDebts')});
   document.getElementById('zOut').textContent = r.due ? fmt(r.zakat) + ' Zakat due' : 'No Zakat due';

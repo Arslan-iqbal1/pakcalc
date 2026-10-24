@@ -29,6 +29,11 @@
 <table id="cTable"><tr><th>Year</th><th>Balance</th></tr></table>
 </div></div>
 <script>
+function syncPair(n, r){var a=document.getElementById(n),b=document.getElementById(r);
+a.addEventListener('input',function(){b.value=a.value;calc();});
+b.addEventListener('input',function(){a.value=b.value;calc();});}
+function val(id){return parseFloat(document.getElementById(id).value)||0;}
+
 var chart = null;
 function calc(){
   var r = compoundCalc(val('cP'), val('cR'), val('cY'), parseInt(document.getElementById('cF').value), val('cM'));

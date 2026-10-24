@@ -29,6 +29,10 @@
 <p id="fDetail"></p>
 </div></div>
 <script>
+function syncPair(n, r){var a=document.getElementById(n),b=document.getElementById(r);
+a.addEventListener('input',function(){b.value=a.value;calc();});
+b.addEventListener('input',function(){a.value=b.value;calc();});}
+function val(id){return parseFloat(document.getElementById(id).value)||0;}
 function calc(){
   var plat = document.getElementById('fPlat').value;
   var feePct = plat === '0' ? val('fCustom') : parseFloat(plat);

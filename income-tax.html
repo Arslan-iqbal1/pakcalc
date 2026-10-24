@@ -30,6 +30,10 @@
 <table id="tTable"><tr><th>Slab (Rs)</th><th>Rate</th><th>In this slab (Rs)</th></tr></table>
 </div></div>
 <script>
+function syncPair(n, r){var a=document.getElementById(n),b=document.getElementById(r);
+a.addEventListener('input',function(){b.value=a.value;calc();});
+b.addEventListener('input',function(){a.value=b.value;calc();});}
+function val(id){return parseFloat(document.getElementById(id).value)||0;}
 function calc(){
   var annual = val('tSal')*12;
   var yr = document.getElementById('tYear').value;
