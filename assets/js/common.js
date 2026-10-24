@@ -37,3 +37,9 @@
     applyLang(localStorage.getItem("pakcalc-lang") || "en");
   });
 })();
+
+/* Global helpers used by every tool page's inline script (must load before them). */
+function syncPair(n, r){var a=document.getElementById(n),b=document.getElementById(r);
+a.addEventListener('input',function(){b.value=a.value;calc();});
+b.addEventListener('input',function(){a.value=b.value;calc();});}
+function val(id){return parseFloat(document.getElementById(id).value)||0;}

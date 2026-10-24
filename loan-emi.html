@@ -62,13 +62,6 @@ function calc(){
 syncPair('lAmt','lAmtR'); syncPair('lRate','lRateR'); syncPair('lYrs','lYrsR');
 syncPair('lAmtB','lAmtBR'); syncPair('lRateB','lRateBR'); syncPair('lYrsB','lYrsBR'); calc();
 </script>
-
-<script>
-function syncPair(n, r){var a=document.getElementById(n),b=document.getElementById(r);
-a.addEventListener('input',function(){b.value=a.value;calc();});
-b.addEventListener('input',function(){a.value=b.value;calc();});}
-function val(id){return parseFloat(document.getElementById(id).value)||0;}
-</script>
 <div class="card"><h3 data-i18n="related">Related calculators</h3><p><a class="btn" href="compound-interest.html">Compound Interest Calculator</a> <a class="btn" href="salary.html">Salary Calculator</a> <a class="btn" href="income-tax.html">Income Tax Calculator</a> </p><p><a href="guide-loan-emi.html" data-i18n="guide-link">Read the full guide</a></p></div>
 </main>
 <footer><div class="wrap"><div class="grid"><div><h3>Calculators</h3><a href="zakat.html">Zakat Calculator</a><br><a href="income-tax.html">Income Tax Calculator</a><br><a href="loan-emi.html">Loan / EMI Calculator</a><br><a href="compound-interest.html">Compound Interest Calculator</a><br><a href="salary.html">Salary Calculator</a><br><a href="currency-converter.html">Currency Converter</a><br><a href="freelancer-fee.html">Freelancer Fee Calculator</a><br></div><div><h3>Guides</h3><a href="guide-zakat.html">How to Calculate Zakat in Pakistan</a><br><a href="guide-income-tax.html">Pakistan Income Tax Slabs 2025-26 Explained</a><br><a href="guide-loan-emi.html">How Loan EMI Works (and How to Pay Less Interest)</a><br><a href="guide-compound-interest.html">Compound Interest: How Your Money Grows</a><br><a href="guide-salary.html">Understanding Your Salary Slip and Tax Deduction</a><br><a href="guide-currency.html">USD to PKR Exchange: A Practical Guide</a><br><a href="guide-freelancer-fee.html">Fiverr and Upwork Fees: What Freelancers Actually Keep</a><br></div><div><h3>Company</h3><a href="about.html">About Us</a><br><a href="contact.html">Contact Us</a><br><a href="privacy-policy.html">Privacy Policy</a><br><a href="terms.html">Terms of Service</a><br><a href="disclaimer.html">Disclaimer</a><br><a href="calculators.html">All Calculators</a><br></div></div><p>Content last reviewed: October 2026.</p><p>© PakCalc — Pakistan Finance Calculators. Figures are estimates for education only, not financial advice. Tax and Zakat rates change over time; verify current rates with FBR or a qualified scholar before acting.</p></div></footer>
